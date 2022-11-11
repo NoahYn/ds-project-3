@@ -26,7 +26,6 @@ void Manager::run(const char* command_txt){
 	
 	char* str=NULL;
 	char* str2=NULL;
-	char* context = NULL;
 	char buf[129]={0};
 
 	while(fin.getline(buf, 128))
