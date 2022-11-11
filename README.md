@@ -19,7 +19,7 @@
 
 ### 1. 프로젝트 문서 및 소스코드 수정사항
 
-#### 
+#### [DS_Project3_ver1.pdf](https://github.com/DSLDataStorage/DS_Project_3_2022_2/files/9986659/DS_Project3_ver1.pdf)
 
 
 ```
@@ -28,6 +28,8 @@
 
 ### 2. 자주들어오는 질문 
 
+**Q. command.txt와 graph.txt는 제공하지 않나요?**  
+A. 네, 따로 제공하지 않습니다.
 
 --------------------------
 ### Knowledge 
@@ -53,21 +55,21 @@ $ pwd
 ##### 먼저 해당 github에 저장되어 있는 base 코드를 다운받는다.
 ```
 $ sudo apt-get install git
-$ git clone https://github.com/DSLDataStorage/DS_Project_2_2022_2.git
+$ git clone https://github.com/DSLDataStorage/DS_Project_3_2022_2.git
 ```
 
 ### how to compile this project
 ##### make명령어 실행 후 ls명령어를 통해 해당 디렉토리를 확인해 보면 run 이라는 파일이 생긴것을 확인 할 수 있다. 
 ```
 $ make
-g++ -std=c++11 -g -o run HeaderTable.cpp FPNode.cpp BpTree.cpp Manager.cpp main.cpp FPGrowth.cpp BpTree.h Manager.h FrequentPatternNode.h BpTreeNode.h FPGrowth.h BpTreeIndexNode.h HeaderTable.h FPNode.h BpTreeDataNode.h
+g++ -std=c++11 -g -o run GraphMethod.cpp ListGraph.cpp Manager.cpp Graph.cpp MatrixGraph.cpp main.cpp Manager.h vertexSet.h Graph.h MatrixGraph.h ListGraph.h GraphMethod.h
 
 $ ls
-BpTree.cpp BpTreeNode.h FPNode.cpp main.cpp market.txt BpTreeDataNode.h command.txt FPNode.h makefile BpTree.h FPGrowth.cpp HeaderTable.cpp Manager.cpp FrequentPatternNode.h BpTreeIndexNode.h FPGrowth.h HeaderTable.h Manager.h **run**
+Graph.cpp  Graph.h  GraphMethod.cpp  GraphMethod.h  ListGraph.cpp  ListGraph.h  main.cpp  makefile  Manager.cpp  Manager.h  MatrixGraph.cpp  MatrixGraph.h  **run**
 ```
 ### how to run code
 ##### ./(생성된 실행파일) 의 형식으로 생성된 run 실행파일을 실행한다.
-##### 실행하면 결과로 result.txt파일과 log.txt파일이 생성되면서 결과가 result.txt와 log.txt에 저장된다. 
+##### 실행하면 결과로 log.txt파일이 생성되면서 결과가 log.txt에 저장된다. 
 ```
 $ ./run
 $ cat log.txt
