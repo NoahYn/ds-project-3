@@ -6,6 +6,7 @@
 class Manager{
 private:
 	Graph* graph;
+	ifstream fin;
 	ofstream fout;
 	int load;
 
@@ -15,7 +16,7 @@ public:
 
 	void run(const char * command_txt);
 	
-	bool LOAD(char* filename);
+	bool LOAD(string filename);
 	bool PRINT();
 	
 	bool mBFS(int vertex);

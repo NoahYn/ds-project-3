@@ -1,4 +1,5 @@
 #include "Manager.h"
+#include <sstream>
 
 Manager::Manager()
 {
@@ -24,32 +25,132 @@ void Manager::run(const char* command_txt){
 		return;
 	}
 	
-	char* str=NULL;
-	char* str2=NULL;
-	char buf[129]={0};
+	string buf;
 
-	while(fin.getline(buf, 128))
-	{
+	while(!fin.eof()) {
+		getline(fin, buf);
+		if (buf.find("LOAD") != string::npos) {
+			stringstream ss(buf);
+			getline(ss, buf, '\t');
+			getline(ss, buf);
+			LOAD(buf);
+		}
+		else if (buf == "PRINT") {
+			PRINT();	
+		}
+		else if (buf.find("BFS") != string::npos) {
+			stringstream ss(buf);
+			getline(ss, buf, '\t');
+			getline(ss, buf);
+			mBFS(stoi(buf));
+		}
+		else if (buf.find("DFS") != string::npos) {
+			stringstream ss(buf);
+			getline(ss, buf, '\t');
+			getline(ss, buf);
+			mDFS(stoi(buf));
+		}
+		else if (buf.find("DFS_R") != string::npos) {
+			stringstream ss(buf);
+			getline(ss, buf, '\t');
+			getline(ss, buf);
+			mDFS_R(stoi(buf));
+		}
+		else if (buf == "KRUSKAL") {
+			mKRUSKAL();
+		}
+		else if (buf.find("DIJKSTRA") != string::npos) {
+			stringstream ss(buf);
+			getline(ss, buf, '\t');
+			getline(ss, buf);
+			mDIJKSTRA(stoi(buf));
+		}
+		else if (buf.find("BELLMANFORD") != string::npos) {
+			int opt1;
+			stringstream ss(buf);
+			getline(ss, buf, '\t');
+			getline(ss, buf, '\t');
+			opt1 = stoi(buf);
+			getline(ss, buf);
+			mBELLMANFORD(opt1, stoi(buf));
+		}
+		else if (buf == "FLOYD") {
+			mFLOYD();
+		}
+		else if (buf == "EXIT") {
 
-	}	
+		}
+	}
+
 	fin.close();
 }
 
-bool Manager::LOAD(char* filename)
+bool Manager::LOAD(string filename)
 {
+	ifstream fgraph(filename);
+	string buf;
+	int type; // 0 == list, 1 == matrix
+	int size;
+	int from;
+	int to;
+	int weight;
+	getline(fgraph, buf);
+	if (filename == "graph_L.txt" && buf == "L") {
+		type = 0;
+		getline(fgraph, buf);
+		size = stoi(buf);
+		graph = new ListGraph(type, size);
+		getline(fgraph, buf);
+		from = stoi(buf);
+		for (int i = 0; i < size; i++) {
+			while (i < size) {
+				getline(fgraph, buf);
+				if (buf.find('\t') == string::npos) { // fail to find tab
+					from = stoi(buf);
+					break;
+				}
+				stringstream ss(buf);
+				getline(ss, buf, '\t');
+				to = stoi(buf);
+				getline(ss, buf);
+				weight = stoi(buf);
+//				printf("%d\t%d\t%d\n", from, to, weight);
+				graph->insertEdge(from, to, weight);
+			}
+		}
+	}
+	else if (filename == "graph_M.txt" && buf == "M") {
+		type = 1;
+		getline(fgraph, buf);
+		size = stoi(buf);
+		graph = new MatrixGraph(type, size);
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if (j == size - 1) 
+					getline(fgraph, buf);
+				else
+					getline(fgraph, buf, '\t');
+				weight = stoi(buf);
+				if (weight != 0) {
+					graph->insertEdge(i, j, weight);
+//					printf("%d\t%d\t%d\n", i, j, weight);
+				}
+			}
+		}
+	}
+
 
 }
 
 bool Manager::PRINT()
 {
-	if(graph->printGraph())
-		return true;
+//	if(graph->printGraph())
+//		return true;
 	return false;
 }
 
 bool Manager::mBFS(int vertex)
 {
-
 }
 
 bool Manager::mDFS(int vertex)

@@ -3,7 +3,7 @@
 
 #include "ListGraph.h"
 #include "MatrixGraph.h"
-#include "vertexSet.h"
+//#include "vertexSet.h"
 
 bool BFS(Graph* graph, int vertex);
 bool DFS(Graph* graph, int vertex);
