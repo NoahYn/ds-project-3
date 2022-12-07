@@ -11,9 +11,28 @@ ListGraph::~ListGraph()
 	delete[] m_List;
 }
 
-void ListGraph::getAdjacentEdges(int vertex, map<int, int>* m)
+void ListGraph::getAdjacentEdges(int vertex, map<int, int> &m)
 {
-//	*m = m_List[vertex];
+	if (vertex >= getSize())
+		return;
+
+	//	m = m_List[vertex]; // direction ver
+	int size = getSize();
+
+	for (int i = 0; i < size; i++)
+	{
+		map<int, int>::iterator iter = m_List[i].find(vertex);
+		map<int, int>::iterator iter2 = m_List[vertex].find(i);
+		int weight = 0;
+		int weight2 = 0;
+
+		if (iter != m_List[i].end())
+			weight = iter->second;
+		if (iter2 != m_List[vertex].end())
+			weight2 = iter2->second;
+		if (weight || weight2)
+			m.insert({i, min(weight, weight2)});
+	}
 }
 
 void ListGraph::insertEdge(int from, int to, int weight)
@@ -23,16 +42,16 @@ void ListGraph::insertEdge(int from, int to, int weight)
 
 bool ListGraph::printGraph(ofstream *fout)
 {
-	for(int i=0; i<m_Size; i++)
+	for (int i = 0; i < m_Size; i++)
 	{
-		*fout<<"["<<i<<"]";
+		*fout << "[" << i << "]";
 
-		for(auto it_=m_List[i].begin(); it_!=m_List[i].end() && *fout<<" -> "; it_++)
+		for (auto it_ = m_List[i].begin(); it_ != m_List[i].end() && *fout << " -> "; it_++)
 		{
-			*fout<<"("<<it_->first<<","<<it_->second<<")";
+			*fout << "(" << it_->first << "," << it_->second << ")";
 		}
-		*fout<<'\n';
+		*fout << '\n';
 	}
-	*fout<<'\n';
+	*fout << '\n';
 	return true;
 }

@@ -10,62 +10,72 @@ Manager::Manager()
 
 Manager::~Manager()
 {
-	if(load)
+	if (load)
 		delete graph;
 	fout.close();
 }
 
-void Manager::run(const char* command_txt){
+void Manager::run(const char *command_txt)
+{
 	ifstream fin;
 	fin.open(command_txt);
-		
-	if(!fin)
+
+	if (!fin)
 	{
-		fout<<"[ERROR] command file open error!"<<endl;
+		fout << "[ERROR] command file open error!" << endl;
 		return;
 	}
-	
+
 	string buf;
 
-	while(!fin.eof()) {
+	while (!fin.eof())
+	{
 		getline(fin, buf);
-		if (buf.find("LOAD") != string::npos) {
+		if (buf.find("LOAD") != string::npos)
+		{
 			stringstream ss(buf);
 			getline(ss, buf, ' ');
 			getline(ss, buf);
 			LOAD(buf);
 		}
-		else if (buf == "PRINT") {
-			PRINT();	
+		else if (buf == "PRINT")
+		{
+			PRINT();
 		}
-		else if (buf.find("BFS") != string::npos) {
+		else if (buf.find("BFS") != string::npos)
+		{
 			stringstream ss(buf);
 			getline(ss, buf, ' ');
 			getline(ss, buf);
 			mBFS(stoi(buf));
 		}
-		else if (buf.find("DFS") != string::npos) {
-			stringstream ss(buf);
-			getline(ss, buf, ' ');
-			getline(ss, buf);
-			mDFS(stoi(buf));
-		}
-		else if (buf.find("DFS_R") != string::npos) {
+		else if (buf.find("DFS_R") != string::npos)
+		{
 			stringstream ss(buf);
 			getline(ss, buf, ' ');
 			getline(ss, buf);
 			mDFS_R(stoi(buf));
 		}
-		else if (buf == "KRUSKAL") {
+		else if (buf.find("DFS") != string::npos)
+		{
+			stringstream ss(buf);
+			getline(ss, buf, ' ');
+			getline(ss, buf);
+			mDFS(stoi(buf));
+		}
+		else if (buf == "KRUSKAL")
+		{
 			mKRUSKAL();
 		}
-		else if (buf.find("DIJKSTRA") != string::npos) {
+		else if (buf.find("DIJKSTRA") != string::npos)
+		{
 			stringstream ss(buf);
 			getline(ss, buf, ' ');
 			getline(ss, buf);
 			mDIJKSTRA(stoi(buf));
 		}
-		else if (buf.find("BELLMANFORD") != string::npos) {
+		else if (buf.find("BELLMANFORD") != string::npos)
+		{
 			int opt1;
 			stringstream ss(buf);
 			getline(ss, buf, ' ');
@@ -74,11 +84,12 @@ void Manager::run(const char* command_txt){
 			getline(ss, buf);
 			mBELLMANFORD(opt1, stoi(buf));
 		}
-		else if (buf == "FLOYD") {
+		else if (buf == "FLOYD")
+		{
 			mFLOYD();
 		}
-		else if (buf == "EXIT") {
-
+		else if (buf == "EXIT")
+		{
 		}
 	}
 
@@ -88,7 +99,8 @@ void Manager::run(const char* command_txt){
 bool Manager::LOAD(string filename)
 {
 	ifstream fgraph(filename);
-	if (!fgraph.is_open()) {
+	if (!fgraph.is_open())
+	{
 		printErrorCode(100);
 		return false;
 	}
@@ -99,17 +111,21 @@ bool Manager::LOAD(string filename)
 	int to;
 	int weight;
 	getline(fgraph, buf);
-	if (filename == "graph_L.txt" && buf == "L") {
+	if (filename == "graph_L.txt" && buf == "L")
+	{
 		type = 0;
 		getline(fgraph, buf);
 		size = stoi(buf);
 		graph = new ListGraph(type, size);
 		getline(fgraph, buf);
 		from = stoi(buf);
-		for (int i = 0; i < size; i++) {
-			while (i < size) {
+		for (int i = 0; i < size; i++)
+		{
+			while (i < size)
+			{
 				getline(fgraph, buf);
-				if (buf.find(' ') == string::npos) { // fail to find tab
+				if (buf.find(' ') == string::npos)
+				{ // fail to find tab
 					from = stoi(buf);
 					break;
 				}
@@ -118,88 +134,142 @@ bool Manager::LOAD(string filename)
 				to = stoi(buf);
 				getline(ss, buf);
 				weight = stoi(buf);
-//				printf("%d\t%d\t%d\n", from, to, weight);
 				graph->insertEdge(from, to, weight);
 			}
 		}
 	}
-	else if (filename == "graph_M.txt" && buf == "M") {
+	else if (filename == "graph_M.txt" && buf == "M")
+	{
 		type = 1;
 		getline(fgraph, buf);
 		size = stoi(buf);
 		graph = new MatrixGraph(type, size);
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				if (j == size - 1) 
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = 0; j < size; j++)
+			{
+				if (j == size - 1)
 					getline(fgraph, buf);
 				else
 					getline(fgraph, buf, ' ');
 				weight = stoi(buf);
-				if (weight != 0) {
+				if (weight != 0)
 					graph->insertEdge(i, j, weight);
-//					printf("%d\t%d\t%d\n", i, j, weight);
-				}
 			}
 		}
 	}
 
-	fout<<"======== LOAD ========\n";
-	fout<< "Success\n";
-	fout<<"======================\n";
+	fout << "======== LOAD ========\n";
+	fout << "Success\n";
+	fout << "======================\n";
 
 	return true;
 }
 
 bool Manager::PRINT()
 {
-	if(graph == nullptr) { // graph doesn't exist
+	if (graph == nullptr)
+	{ // graph doesn't exist
 		printErrorCode(200);
 		return false;
 	}
+	fout << "======== PRINT ========\n";
 	graph->printGraph(&fout);
-	map <int, int> *m;
-	graph->getAdjacentEdges(2, m);
+	fout << "=======================\n";
 	return true;
 }
 
 bool Manager::mBFS(int vertex)
 {
+	if (graph == nullptr)
+	{
+		printErrorCode(300);
+		return false;
+	}
+	fout << "======== BFS ========\n";
+	fout << "startvertex : " << vertex << "\n";
+	BFS(graph, vertex, &fout);
+	fout << "=====================\n";
+	return true;
 }
 
 bool Manager::mDFS(int vertex)
 {
-
+	if (graph == nullptr)
+	{
+		printErrorCode(400);
+		return false;
+	}
+	fout << "======== DFS ========\n";
+	fout << "startvertex : " << vertex << "\n";
+	DFS(graph, vertex, &fout);
+	fout << "=====================\n";
+	return true;
 }
-
 
 bool Manager::mDFS_R(int vertex)
 {
-
+	if (graph == nullptr)
+	{
+		printErrorCode(500);
+		return false;
+	}
+	int size = graph->getSize();
+	vector<bool> visited(size, false);
+	fout << "======== DFS_R ========\n";
+	fout << "startvertex : " << vertex << "\n";
+	DFS_R(graph, &visited, vertex, &fout);
+	fout << "=======================\n";
+	return true;
 }
 
 bool Manager::mDIJKSTRA(int vertex)
 {
-
+	if (graph == nullptr)
+	{
+		printErrorCode(700);
+		return false;
+	}
+	Dijkstra(graph, vertex, &fout);
+	return true;
 }
 
 bool Manager::mKRUSKAL()
 {
-
+	if (graph == nullptr)
+	{
+		printErrorCode(600);
+		return false;
+	}
+	Kruskal(graph, &fout);
+	return true;
 }
 
 bool Manager::mBELLMANFORD(int s_vertex, int e_vertex)
 {
-
+	if (graph == nullptr)
+	{
+		printErrorCode(800);
+		return false;
+	}
+	Bellmanford(graph, s_vertex, e_vertex, &fout);
+	return true;
 }
 
 bool Manager::mFLOYD()
 {
-
+	if (graph == nullptr)
+	{
+		printErrorCode(900);
+		return false;
+	}
+	FLOYD(graph, &fout);
+	return true;
 }
 
 void Manager::printErrorCode(int n)
 {
-	fout<<"======== ERROR ========\n";
+	fout << "======== ERROR ========\n";
 	fout << n << "\n";
-	fout<<"=======================\n";
+	fout << "=======================\n";
 }
