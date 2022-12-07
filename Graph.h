@@ -24,15 +24,15 @@ protected:
 	int m_Size;
 
 public:
-	Graph(bool type, int size);
-	~Graph();
+	Graph(bool type, int size) { m_Type=type; m_Size=size;}
+	~Graph() {}
 
-	bool getType();
-	int getSize();
+	bool getType() { return m_Type; }
+	int getSize() { return m_Size; }
 	
 	virtual void getAdjacentEdges(int vertex, map<int, int>* m) = 0;
 	virtual void insertEdge(int from, int to, int weight) = 0;
-	virtual	bool printGraph() = 0;
+	virtual	bool printGraph(ofstream *fout) = 0;
 };
 
 #endif

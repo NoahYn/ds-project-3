@@ -8,12 +8,12 @@ private:
 	int** m_Mat;
 
 public:
-	MatrixGraph(bool type, int size);
+	MatrixGraph(bool type, int size); 
 	~MatrixGraph();	
 		
 	void getAdjacentEdges(int vertex, map<int, int>* m);
 	void insertEdge(int from, int to, int weight);
-	bool printGraph();
+	bool printGraph(ofstream *fout);
 };
 
 #endif

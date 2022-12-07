@@ -31,7 +31,7 @@ void Manager::run(const char* command_txt){
 		getline(fin, buf);
 		if (buf.find("LOAD") != string::npos) {
 			stringstream ss(buf);
-			getline(ss, buf, '\t');
+			getline(ss, buf, ' ');
 			getline(ss, buf);
 			LOAD(buf);
 		}
@@ -40,19 +40,19 @@ void Manager::run(const char* command_txt){
 		}
 		else if (buf.find("BFS") != string::npos) {
 			stringstream ss(buf);
-			getline(ss, buf, '\t');
+			getline(ss, buf, ' ');
 			getline(ss, buf);
 			mBFS(stoi(buf));
 		}
 		else if (buf.find("DFS") != string::npos) {
 			stringstream ss(buf);
-			getline(ss, buf, '\t');
+			getline(ss, buf, ' ');
 			getline(ss, buf);
 			mDFS(stoi(buf));
 		}
 		else if (buf.find("DFS_R") != string::npos) {
 			stringstream ss(buf);
-			getline(ss, buf, '\t');
+			getline(ss, buf, ' ');
 			getline(ss, buf);
 			mDFS_R(stoi(buf));
 		}
@@ -61,15 +61,15 @@ void Manager::run(const char* command_txt){
 		}
 		else if (buf.find("DIJKSTRA") != string::npos) {
 			stringstream ss(buf);
-			getline(ss, buf, '\t');
+			getline(ss, buf, ' ');
 			getline(ss, buf);
 			mDIJKSTRA(stoi(buf));
 		}
 		else if (buf.find("BELLMANFORD") != string::npos) {
 			int opt1;
 			stringstream ss(buf);
-			getline(ss, buf, '\t');
-			getline(ss, buf, '\t');
+			getline(ss, buf, ' ');
+			getline(ss, buf, ' ');
 			opt1 = stoi(buf);
 			getline(ss, buf);
 			mBELLMANFORD(opt1, stoi(buf));
@@ -88,6 +88,10 @@ void Manager::run(const char* command_txt){
 bool Manager::LOAD(string filename)
 {
 	ifstream fgraph(filename);
+	if (!fgraph.is_open()) {
+		printErrorCode(100);
+		return false;
+	}
 	string buf;
 	int type; // 0 == list, 1 == matrix
 	int size;
@@ -105,12 +109,12 @@ bool Manager::LOAD(string filename)
 		for (int i = 0; i < size; i++) {
 			while (i < size) {
 				getline(fgraph, buf);
-				if (buf.find('\t') == string::npos) { // fail to find tab
+				if (buf.find(' ') == string::npos) { // fail to find tab
 					from = stoi(buf);
 					break;
 				}
 				stringstream ss(buf);
-				getline(ss, buf, '\t');
+				getline(ss, buf, ' ');
 				to = stoi(buf);
 				getline(ss, buf);
 				weight = stoi(buf);
@@ -129,7 +133,7 @@ bool Manager::LOAD(string filename)
 				if (j == size - 1) 
 					getline(fgraph, buf);
 				else
-					getline(fgraph, buf, '\t');
+					getline(fgraph, buf, ' ');
 				weight = stoi(buf);
 				if (weight != 0) {
 					graph->insertEdge(i, j, weight);
@@ -139,14 +143,23 @@ bool Manager::LOAD(string filename)
 		}
 	}
 
+	fout<<"======== LOAD ========\n";
+	fout<< "Success\n";
+	fout<<"======================\n";
 
+	return true;
 }
 
 bool Manager::PRINT()
 {
-//	if(graph->printGraph())
-//		return true;
-	return false;
+	if(graph == nullptr) { // graph doesn't exist
+		printErrorCode(200);
+		return false;
+	}
+	graph->printGraph(&fout);
+	map <int, int> *m;
+	graph->getAdjacentEdges(2, m);
+	return true;
 }
 
 bool Manager::mBFS(int vertex)
@@ -186,7 +199,7 @@ bool Manager::mFLOYD()
 
 void Manager::printErrorCode(int n)
 {
-	fout<<"======== ERROR ========"<<endl;
-	fout<<n<<endl;
-	fout<<"======================="<<endl;
+	fout<<"======== ERROR ========\n";
+	fout << n << "\n";
+	fout<<"=======================\n";
 }

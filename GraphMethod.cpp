@@ -2,7 +2,7 @@
 
 bool BFS(Graph* graph, int vertex)
 {
-
+	
 }
 
 bool DFS(Graph* graph, int vertex)
