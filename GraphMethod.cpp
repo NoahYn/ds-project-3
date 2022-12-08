@@ -1,6 +1,5 @@
 #include "GraphMethod.h"
 
-// graph -> getsize gettype getadjacentedges
 bool BFS(Graph *graph, int vertex, ofstream *fout)
 {
     int size = graph->getSize();
@@ -93,6 +92,7 @@ bool DFS_R(Graph *graph, vector<bool> *visit, int vertex, ofstream *fout)
 
 bool Kruskal(Graph *graph, ofstream *fout)
 {
+
     return true;
 }
 

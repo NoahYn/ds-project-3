@@ -230,7 +230,10 @@ bool Manager::mDIJKSTRA(int vertex)
 		printErrorCode(700);
 		return false;
 	}
+	fout << "======== Dijkstra ========\n";
+	fout << "startvertex : " << vertex << "\n";
 	Dijkstra(graph, vertex, &fout);
+	fout << "==========================\n";
 	return true;
 }
 
@@ -241,7 +244,9 @@ bool Manager::mKRUSKAL()
 		printErrorCode(600);
 		return false;
 	}
+	fout << "======== Kruskal ========\n";
 	Kruskal(graph, &fout);
+	fout << "=========================\n";
 	return true;
 }
 
@@ -252,7 +257,9 @@ bool Manager::mBELLMANFORD(int s_vertex, int e_vertex)
 		printErrorCode(800);
 		return false;
 	}
+	fout << "====== Bellman-Ford ======\n";
 	Bellmanford(graph, s_vertex, e_vertex, &fout);
+	fout << "==========================\n";
 	return true;
 }
 
@@ -263,7 +270,9 @@ bool Manager::mFLOYD()
 		printErrorCode(900);
 		return false;
 	}
+	fout << "======== FLOYD ========\n";
 	FLOYD(graph, &fout);
+	fout << "=======================\n";
 	return true;
 }
 
