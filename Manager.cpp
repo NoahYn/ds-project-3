@@ -47,6 +47,10 @@ void Manager::run(const char *command_txt)
 			stringstream ss(buf);
 			getline(ss, buf, ' ');
 			getline(ss, buf);
+			if (buf.empty()) {
+				printErrorCode(300);
+				continue;
+			}
 			mBFS(stoi(buf));
 		}
 		else if (buf.find("DFS_R") != string::npos)
@@ -54,6 +58,10 @@ void Manager::run(const char *command_txt)
 			stringstream ss(buf);
 			getline(ss, buf, ' ');
 			getline(ss, buf);
+			if (buf.empty()) {
+				printErrorCode(500);
+				continue;
+			}
 			mDFS_R(stoi(buf));
 		}
 		else if (buf.find("DFS") != string::npos)
@@ -61,6 +69,10 @@ void Manager::run(const char *command_txt)
 			stringstream ss(buf);
 			getline(ss, buf, ' ');
 			getline(ss, buf);
+			if (buf.empty()) {
+				printErrorCode(400);
+				continue;
+			}
 			mDFS(stoi(buf));
 		}
 		else if (buf == "KRUSKAL")
@@ -181,42 +193,39 @@ bool Manager::PRINT()
 
 bool Manager::mBFS(int vertex)
 {
-	if (graph == nullptr) // TODO vertex입력 안했거나 그래프에 없는 vertex일 경우
+	if (graph == nullptr || vertex >= graph->getSize()) 
 	{
 		printErrorCode(300);
 		return false;
 	}
-	fout << "======== BFS ========\n";
-	fout << "startvertex : " << vertex << "\n";
 	BFS(graph, vertex, &fout);
-	fout << "=====================\n";
 	return true;
 }
 
 bool Manager::mDFS(int vertex)
 {
-	if (graph == nullptr)// TODO vertex입력 안했거나 그래프에 없는 vertex일 경우
+	if (graph == nullptr || vertex >= graph->getSize()) 
 	{
 		printErrorCode(400);
 		return false;
 	}
-	fout << "======== DFS ========\n";
-	fout << "startvertex : " << vertex << "\n";
 	DFS(graph, vertex, &fout);
-	fout << "=====================\n";
 	return true;
 }
 
 bool Manager::mDFS_R(int vertex)
 {
-	if (graph == nullptr)// TODO vertex입력 안했거나 그래프에 없는 vertex일 경우
+	int size = graph->getSize();
+	if (graph == nullptr || vertex >= size) 
 	{
 		printErrorCode(500);
 		return false;
 	}
-	int size = graph->getSize();
 	vector<bool> visited(size, false);
+	fout << "======== DFS_R ========\n";
+	fout << "startvertex : " << vertex << "\n";
 	DFS_R(graph, &visited, vertex, &fout);
+	fout << "=======================\n";
 	return true;
 }
 

@@ -3,6 +3,9 @@
 
 bool BFS(Graph *graph, int vertex, ofstream *fout)
 {
+	*fout << "======== BFS ========\n";
+	*fout << "startvertex : " << vertex << "\n";
+	
     int size = graph->getSize();
     bool visited[size] = {false};
     queue<int> q;
@@ -27,13 +30,16 @@ bool BFS(Graph *graph, int vertex, ofstream *fout)
             }
         }
     }
-    *fout << "\n";
 
+	*fout << "\n=====================\n";
     return true;
 }
 
 bool DFS(Graph *graph, int vertex, ofstream *fout)
 {
+	*fout << "======== DFS ========\n";
+	*fout << "startvertex : " << vertex << "\n";
+	
     int size = graph->getSize();
     bool visited[size] = {false};
     stack<int> s;
@@ -66,14 +72,12 @@ bool DFS(Graph *graph, int vertex, ofstream *fout)
         m.clear();
     }
 
+	*fout << "=====================\n";
     return true;
 }
 
 bool DFS_R(Graph *graph, vector<bool> *visit, int vertex, ofstream *fout)
 {
-	*fout << "======== DFS_R ========\n";
-	*fout << "startvertex : " << vertex << "\n";
-
     visit->at(vertex) = true;
     if (find(visit->begin(), visit->end(), false) != visit->end()) // find false
         *fout << vertex << " -> ";
@@ -89,7 +93,6 @@ bool DFS_R(Graph *graph, vector<bool> *visit, int vertex, ofstream *fout)
             DFS_R(graph, visit, i_m.first, fout);
         }
     }
-	*fout << "=======================\n";
 
     return true;
 }
@@ -182,10 +185,6 @@ bool Kruskal(Graph *graph, ofstream *fout)
     *fout << "=========================\n";
 	return true;
 }
-
-/*
-입력한 그래프를 통해 MST를 구할 수 없는 경우, 명령어를 수행할 수 없는 경우 log.txt에 오류 코드 600을 출력한다.
-*/
 
 bool Dijkstra(Graph *graph, int vertex, ofstream *fout)
 {
