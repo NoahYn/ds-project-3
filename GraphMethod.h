@@ -4,6 +4,12 @@
 #include "ListGraph.h"
 #include "MatrixGraph.h"
 // #include "vertexSet.h"
+struct edge
+{
+    int v1;
+    int v2;
+    int weight;
+};
 
 bool BFS(Graph *graph, int vertex, ofstream *fout);
 bool DFS(Graph *graph, int vertex, ofstream *fout);

@@ -181,7 +181,7 @@ bool Manager::PRINT()
 
 bool Manager::mBFS(int vertex)
 {
-	if (graph == nullptr)
+	if (graph == nullptr) // TODO vertex입력 안했거나 그래프에 없는 vertex일 경우
 	{
 		printErrorCode(300);
 		return false;
@@ -195,7 +195,7 @@ bool Manager::mBFS(int vertex)
 
 bool Manager::mDFS(int vertex)
 {
-	if (graph == nullptr)
+	if (graph == nullptr)// TODO vertex입력 안했거나 그래프에 없는 vertex일 경우
 	{
 		printErrorCode(400);
 		return false;
@@ -209,17 +209,28 @@ bool Manager::mDFS(int vertex)
 
 bool Manager::mDFS_R(int vertex)
 {
-	if (graph == nullptr)
+	if (graph == nullptr)// TODO vertex입력 안했거나 그래프에 없는 vertex일 경우
 	{
 		printErrorCode(500);
 		return false;
 	}
 	int size = graph->getSize();
 	vector<bool> visited(size, false);
-	fout << "======== DFS_R ========\n";
-	fout << "startvertex : " << vertex << "\n";
 	DFS_R(graph, &visited, vertex, &fout);
-	fout << "=======================\n";
+	return true;
+}
+
+bool Manager::mKRUSKAL() 
+{
+	if (graph == nullptr) 
+	{
+		printErrorCode(600);
+		return false;
+	}
+	if (!Kruskal(graph, &fout)) { // can't make MST
+		printErrorCode(600);
+		return false;	
+	}
 	return true;
 }
 
@@ -234,19 +245,6 @@ bool Manager::mDIJKSTRA(int vertex)
 	fout << "startvertex : " << vertex << "\n";
 	Dijkstra(graph, vertex, &fout);
 	fout << "==========================\n";
-	return true;
-}
-
-bool Manager::mKRUSKAL()
-{
-	if (graph == nullptr)
-	{
-		printErrorCode(600);
-		return false;
-	}
-	fout << "======== Kruskal ========\n";
-	Kruskal(graph, &fout);
-	fout << "=========================\n";
 	return true;
 }
 
@@ -273,6 +271,7 @@ bool Manager::mFLOYD()
 	fout << "======== FLOYD ========\n";
 	FLOYD(graph, &fout);
 	fout << "=======================\n";
+	cout << endl;
 	return true;
 }
 

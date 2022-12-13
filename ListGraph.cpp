@@ -24,14 +24,14 @@ void ListGraph::getAdjacentEdges(int vertex, map<int, int> &m)
 		map<int, int>::iterator iter = m_List[i].find(vertex);
 		map<int, int>::iterator iter2 = m_List[vertex].find(i);
 		int weight = 0;
-		int weight2 = 0;
 
-		if (iter != m_List[i].end())
-			weight = iter->second;
-		if (iter2 != m_List[vertex].end())
-			weight2 = iter2->second;
-		if (weight || weight2)
-			m.insert({i, min(weight, weight2)});
+		if (iter != m_List[i].end() && iter2 != m_List[vertex].end())
+			weight = min(iter->second, iter2->second);
+		else 
+			weight = max(iter->second, iter2->second); // weight become 0 or exist edge's weight
+
+		if (weight)
+			m.insert({i, weight});
 	}
 }
 
