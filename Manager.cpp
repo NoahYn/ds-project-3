@@ -298,14 +298,15 @@ bool Manager::mDIJKSTRA(int vertex)
 
 bool Manager::mBELLMANFORD(int s_vertex, int e_vertex)
 {
-	if (graph == nullptr)
+	if (graph == nullptr || s_vertex >= graph->getSize() || e_vertex >= graph->getSize())
 	{
 		printErrorCode(800);
 		return false;
 	}
-	fout << "====== Bellman-Ford ======\n";
-	Bellmanford(graph, s_vertex, e_vertex, &fout);
-	fout << "==========================\n";
+	if (!Bellmanford(graph, s_vertex, e_vertex, &fout)) {
+		printErrorCode(800);
+		return false;
+	}
 	return true;
 }
 
@@ -316,10 +317,10 @@ bool Manager::mFLOYD()
 		printErrorCode(900);
 		return false;
 	}
-	fout << "======== FLOYD ========\n";
-	FLOYD(graph, &fout);
-	fout << "=======================\n";
-	cout << endl;
+	if (!FLOYD(graph, &fout)) {
+		printErrorCode(900);
+		return false;
+	}
 	return true;
 }
 
@@ -327,5 +328,5 @@ void Manager::printErrorCode(int n)
 {
 	fout << "======== ERROR ========\n";
 	fout << n << "\n";
-	fout << "=======================\n";
+	fout << "=======================\n\n";
 }

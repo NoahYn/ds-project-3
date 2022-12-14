@@ -261,42 +261,114 @@ bool Dijkstra(Graph *graph, int vertex, ofstream *fout)
 
 bool Bellmanford(Graph *graph, int s_vertex, int e_vertex, ofstream *fout)
 {
+	int size = graph->getSize();
+	map <int, int> m[size];
+	for (int i = 0; i < size; i++) 
+		graph->getIncomingEdges(i, m[i]);
+	
+	int dist[size];
+	int prev[size];
+	fill(dist, dist+size, UNREACHABLE);
+	fill(prev, prev+size, -1);
+	dist[s_vertex] = 0;
+
+	for (int i = 0; i < size; i++) {
+		auto it = m[i].find(s_vertex);
+		if (it != m[i].end()) {
+			dist[i] = it->second;
+			prev[i] = s_vertex;
+		}
+	}
+	
+	for (int k = 2; k < size; k++) {
+		for (int v = 0; v < size; v++) {
+			for (auto i : m[v]) {
+				if (dist[v] > dist[i.first] + i.second) {
+					dist[v] = dist[i.first] + i.second;		
+					prev[v] = i.first;	
+				}
+			}
+		}
+	}
+	
+	int neg_cycle_chk = dist[e_vertex];
+	for (int v = 0; v < size; v++) {
+		if (v == s_vertex)
+			continue;
+		for (auto i : m[v]) {
+			if (dist[v] > dist[i.first] + i.second) {
+				dist[v] = dist[i.first] + i.second;				
+				prev[v] = i.first;	
+				return false;
+			}
+		}
+	}
+
+	*fout << "====== Bellman-Ford ======\n";
+	
+	if (dist[e_vertex] == UNREACHABLE) {
+		*fout << "x\n";
+		*fout << "=======================\n\n";
+		return true;;
+	}
+	vector<int> path;
+	int curr = e_vertex;
+	while (prev[curr] >= 0) {
+		path.push_back(curr);
+		curr = prev[curr];
+	} 
+	for (auto ri = path.rbegin(); ri != path.rend(); ri++) {
+		*fout << prev[*ri] << " -> ";
+	}
+	*fout << e_vertex << "\n";
+	*fout << "cost : " << dist[e_vertex] << "\n";	
+	*fout << "==========================\n\n"; // TODO negative cycle error
 
     return true;
 }
 
 /*
-입력한 vertex가 그래프에 존재하지 않거나, 음수 사이클이 발생한 경우 log.txt에 오류 코드 800을 출력한다.
-====== Bellman-Ford =======
 0 → 2 → 5 → 6
 cost : 11
-=======================
-Start Vertex를 기준으로 Bellman-Ford를 수행하여 End vertex까지의 최단 경로와 거리를 구하여 log.txt에 저장한다. 음수인 weight가 있는 경우에도 동작하며 start vertex에서 end vertex로 도달할 수 없는 경우 ‘x’를 출력한다. 
-모든 vertex에 연결된 edge정보를 반복적으로 갱신 (visited 안쓰고 distance, ㅔprev   path만)
-1. 시작 vertex의 거리를 0으로 초기화, 다른 vertex로의 거리를 무한대로 초기화
+
+음수인 weight가 있는 경우에도 동작하며 start vertex에서 end vertex로 도달할 수 없는 경우 ‘x’를 출력한다. 
+모든 vertex에 연결된 edge정보를 반복적으로 갱신 (visited 안쓰고 distance, prev, path만)
 2. 각 vertex에 대하여 주변 edge로의 거리를 보다 짧은 경로로 갱신
 3. 2를 vertex수만큼 반복
 4. 2를 한 번 더 수행했을 때 거리가 갱신된다면 음수사이클 발생
 Bellman-Ford 알고리즘은 Start vertex와 End vertex를 입력 받아 최단 경로와 거리를 구한다. Weight가 음수인 경우에도 정상 동작하며, 음수 사이클이 발생할 경우 에러를 출력한다. 
-void MatrixWDigrpah::BellmanFord(const int n, const int s) {
-	for (int i=0; i<n; i++) dist[i] = length[s][i]; 
-			// initialize k == 1
-	for (int k=2; k<=n-1; k++)
-		for (v != s && v has incoming edge w)
-				for (each <w.v>) 
-					dist[v] = min(dist[v], dist[w] + length[w][v]);
-}
 */
 
 bool FLOYD(Graph *graph, ofstream *fout)
 {
+	int size = graph->getSize();
+	
+//	A[i][j] = length[i][j];
 
+	for (int k = 0; k < size; k++) {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+//				A[i][j] = min(A[i][j], A[i][k] + A[k][j]);
+			}
+		}
+	}
+
+	*fout << "======== FLOYD ========\n";
+	for (int i = 0; i < size; i++)
+		*fout << "["<<i<<"] ";
+	for (int i = 0; i < size; i++) {
+		*fout << "["<<i<<"] ";
+		
+		*fout << endl;
+	}
+	// TODO negative cycle
+	*fout << "=======================\n\n";
     return true;
 }
 
 /*
-FLOYD (FLOYD) 모든 vertex의 쌍에 대해서 Start vertex 에서 Endvertex로 가는 데 필요한 최소 비용을 행렬 형태로 출력한다. 기준 vertex에서 도달할 수 없는 vertex의 경우 ‘x’를 출력한다. 
-명령어를 수행할 수 없거나 음수 사이클이 발생한 경우 log.txt에 오류 코드 900을 출력한다.
+음수사이클 -> 에러
+기준 vertex에서 도달할 수 없는 vertex의 경우 ‘x’를 출력한다. 
 ======== FLOYD ========
 [0] [1] [2] [3] [4] [5] [6]
 [0]  0   6   2   9   5   10   11
@@ -307,10 +379,4 @@ FLOYD (FLOYD) 모든 vertex의 쌍에 대해서 Start vertex 에서 Endvertex로
 1. 모든 vertex를 순차적으로 선택
 2. 선택된 vertex를 경유하는 모든 vertex쌍의 최단 거리 업데이트
 3. 모든 vertex에 대해 2를 반복
-FLOYD는 입력 인자 없이 모든 쌍에 대하여 최단 경로 행렬을 구한다. Weight가 음수인 경우에도 정상 동작하며, 음수 사이클이 발생할 경우 에러를 출력한다. 
-A[i][j] = length[i][j];
-for (int k=1; k<=n; k++) 
-	for (int i=1; i<=n; i++)
-		for (int j=1; j<=n; k++) 
-			A[i][j] = min(A[i][j], A[i][k] + A[k][j]);
 */

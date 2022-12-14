@@ -13,6 +13,7 @@ public:
 	~ListGraph();
 
 	void getOutgoingEdges(int vertex, map<int, int> &m);
+	void getIncomingEdges(int vertex, map<int, int> &m);
 	void getAdjacentEdges(int vertex, map<int, int> &m);
 	void insertEdge(int from, int to, int weight);
 	bool printGraph(ofstream *fout);

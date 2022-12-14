@@ -19,6 +19,23 @@ void ListGraph::getOutgoingEdges(int vertex, map<int, int> &m)
 	m = m_List[vertex]; 
 }
 
+void ListGraph::getIncomingEdges(int vertex, map<int, int> &m)
+{
+	int size = getSize();
+	if (vertex >= size)
+		return;
+
+	for (int i = 0; i < size; i++)
+	{
+		map<int, int>::iterator iter = m_List[i].find(vertex);
+		int weight = 0;
+
+		if (iter != m_List[i].end())
+			m.insert({i, iter->second});
+	}
+}
+
+
 void ListGraph::getAdjacentEdges(int vertex, map<int, int> &m)
 {
 	int size = getSize();
