@@ -299,7 +299,7 @@ bool Bellmanford(Graph *graph, int s_vertex, int e_vertex, ofstream *fout)
 			if (dist[v] > dist[i.first] + i.second) {
 				dist[v] = dist[i.first] + i.second;				
 				prev[v] = i.first;	
-				return false;
+				return false; // negative cycle error
 			}
 		}
 	}
@@ -322,44 +322,51 @@ bool Bellmanford(Graph *graph, int s_vertex, int e_vertex, ofstream *fout)
 	}
 	*fout << e_vertex << "\n";
 	*fout << "cost : " << dist[e_vertex] << "\n";	
-	*fout << "==========================\n\n"; // TODO negative cycle error
+	*fout << "==========================\n\n"; 
 
     return true;
 }
 
-/*
-0 → 2 → 5 → 6
-cost : 11
-
-음수인 weight가 있는 경우에도 동작하며 start vertex에서 end vertex로 도달할 수 없는 경우 ‘x’를 출력한다. 
-모든 vertex에 연결된 edge정보를 반복적으로 갱신 (visited 안쓰고 distance, prev, path만)
-2. 각 vertex에 대하여 주변 edge로의 거리를 보다 짧은 경로로 갱신
-3. 2를 vertex수만큼 반복
-4. 2를 한 번 더 수행했을 때 거리가 갱신된다면 음수사이클 발생
-Bellman-Ford 알고리즘은 Start vertex와 End vertex를 입력 받아 최단 경로와 거리를 구한다. Weight가 음수인 경우에도 정상 동작하며, 음수 사이클이 발생할 경우 에러를 출력한다. 
-*/
-
 bool FLOYD(Graph *graph, ofstream *fout)
 {
 	int size = graph->getSize();
+	map<int, int> m[size];
+	int dist[size][size];
+	for (int i = 0; i < size; i++) {
+		fill(dist[i], dist[i]+size, UNREACHABLE);
+		graph->getOutgoingEdges(i, m[i]);
+		for (auto it : m[i]) {
+			dist[i][it.first] = it.second;
+		}
+		dist[i][i] = 0;
+	}
 	
-//	A[i][j] = length[i][j];
-
 	for (int k = 0; k < size; k++) {
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-//				A[i][j] = min(A[i][j], A[i][k] + A[k][j]);
+				dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+			}
+			if (dist[i][i] < 0) { // negative cycle
+				return false;
 			}
 		}
 	}
 
-	*fout << "======== FLOYD ========\n";
+	*fout << "======== FLOYD ========\n    ";
 	for (int i = 0; i < size; i++)
 		*fout << "["<<i<<"] ";
+	*fout << "\n";
 	for (int i = 0; i < size; i++) {
-		*fout << "["<<i<<"] ";
-		
-		*fout << endl;
+		*fout << "["<<i<<"]  ";
+		for (int j = 0; j < size; j++) {
+			if (dist[i][j] == UNREACHABLE) 
+				*fout << "x   ";
+			else if (dist[i][j] > 9)
+				*fout << dist[i][j] << "  ";
+			else 
+				*fout << dist[i][j] << "   ";
+		}
+		*fout << "\n";
 	}
 	// TODO negative cycle
 	*fout << "=======================\n\n";

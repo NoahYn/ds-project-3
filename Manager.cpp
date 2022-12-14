@@ -139,7 +139,8 @@ void Manager::run(const char *command_txt)
 		}
 		else if (buf.find("EXIT") != string::npos)
 		{
-			break;
+			fin.close();
+			return;
 		}
 	}
 	fin.close();
