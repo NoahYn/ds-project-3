@@ -1,6 +1,6 @@
 #include "ListGraph.h"
 
-ListGraph::ListGraph(bool type, int size) : Graph(type, size)
+ListGraph::ListGraph(bool type, int size) : Graph(type, size) 
 {
 	m_Type = type;
 	m_List = new map<int, int>[size];
@@ -11,13 +11,19 @@ ListGraph::~ListGraph()
 	delete[] m_List;
 }
 
-void ListGraph::getAdjacentEdges(int vertex, map<int, int> &m)
+void ListGraph::getOutgoingEdges(int vertex, map<int, int> &m)
 {
-	if (vertex >= getSize())
+	if (vertex >= getSize()) 
 		return;
 
-	//	m = m_List[vertex]; // direction ver
+	m = m_List[vertex]; 
+}
+
+void ListGraph::getAdjacentEdges(int vertex, map<int, int> &m)
+{
 	int size = getSize();
+	if (vertex >= size)
+		return;
 
 	for (int i = 0; i < size; i++)
 	{
@@ -35,7 +41,7 @@ void ListGraph::getAdjacentEdges(int vertex, map<int, int> &m)
 	}
 }
 
-void ListGraph::insertEdge(int from, int to, int weight)
+void ListGraph::insertEdge(int from, int to, int weight)  
 {
 	m_List[from].insert({to, weight});
 }
@@ -52,6 +58,5 @@ bool ListGraph::printGraph(ofstream *fout)
 		}
 		*fout << '\n';
 	}
-	*fout << '\n';
 	return true;
 }

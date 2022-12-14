@@ -19,6 +19,17 @@ MatrixGraph::~MatrixGraph()
 	delete[] m_Mat;
 }
 
+void MatrixGraph::getOutgoingEdges(int vertex, map<int, int> &m)
+{
+	int size = getSize();
+	if (vertex >= size) 
+		return;
+
+	for (int i = 0; i < size; i++)
+		if (m_Mat[vertex][i])
+			m.insert({i, m_Mat[vertex][i]});
+}
+
 void MatrixGraph::getAdjacentEdges(int vertex, map<int, int> &m)
 {
 	if (vertex >= getSize())
@@ -32,11 +43,6 @@ void MatrixGraph::getAdjacentEdges(int vertex, map<int, int> &m)
 			m.insert({i, m_Mat[vertex][i]});
 		else if (m_Mat[i][vertex])
 			m.insert({i, m_Mat[i][vertex]});
-	/* // direction ver
-		for (int i = 0; i < size; i++)
-			if (m_Mat[vertex][i])
-				m.insert({i, m_Mat[vertex][i]});
-	*/
 }
 
 void MatrixGraph::insertEdge(int from, int to, int weight)

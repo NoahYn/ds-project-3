@@ -1,6 +1,8 @@
 {
 	"files.associations": {
-		"*.tcc": "cpp"
+		"*.tcc": "cpp",
+		"atomic": "cpp",
+		"memory_resource": "cpp"
 	},
 	"editor.stickyScroll.enabled": true
 }

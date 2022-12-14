@@ -10,8 +10,9 @@ Manager::Manager()
 
 Manager::~Manager()
 {
-	if (load)
+	if (load) {
 		delete graph;
+	}
 	fout.close();
 }
 
@@ -36,9 +37,13 @@ void Manager::run(const char *command_txt)
 			stringstream ss(buf);
 			getline(ss, buf, ' ');
 			getline(ss, buf);
+			if (buf.empty()) {
+				printErrorCode(100);
+				continue;
+			}
 			LOAD(buf);
 		}
-		else if (buf == "PRINT")
+		else if (buf.find("PRINT") != string::npos)
 		{
 			PRINT();
 		}
@@ -46,8 +51,12 @@ void Manager::run(const char *command_txt)
 		{
 			stringstream ss(buf);
 			getline(ss, buf, ' ');
-			getline(ss, buf);
 			if (buf.empty()) {
+				printErrorCode(300);
+				continue;
+			}
+			getline(ss, buf);
+			if (buf.empty() || !(buf[0] <= '9' && buf[0] >= '0')) {
 				printErrorCode(300);
 				continue;
 			}
@@ -57,8 +66,12 @@ void Manager::run(const char *command_txt)
 		{
 			stringstream ss(buf);
 			getline(ss, buf, ' ');
-			getline(ss, buf);
 			if (buf.empty()) {
+				printErrorCode(500);
+				continue;
+			}
+			getline(ss, buf);
+			if (buf.empty() || !(buf[0] <= '9' && buf[0] >= '0')) {
 				printErrorCode(500);
 				continue;
 			}
@@ -68,14 +81,18 @@ void Manager::run(const char *command_txt)
 		{
 			stringstream ss(buf);
 			getline(ss, buf, ' ');
-			getline(ss, buf);
 			if (buf.empty()) {
+				printErrorCode(400);
+				continue;
+			}
+			getline(ss, buf);
+			if (buf.empty() || !(buf[0] <= '9' && buf[0] >= '0')) {
 				printErrorCode(400);
 				continue;
 			}
 			mDFS(stoi(buf));
 		}
-		else if (buf == "KRUSKAL")
+		else if (buf.find("KRUSKAL") != string::npos)
 		{
 			mKRUSKAL();
 		}
@@ -83,7 +100,15 @@ void Manager::run(const char *command_txt)
 		{
 			stringstream ss(buf);
 			getline(ss, buf, ' ');
+			if (buf.empty()) {
+				printErrorCode(700);
+				continue;
+			}
 			getline(ss, buf);
+			if (buf.empty() || !(buf[0] <= '9' && buf[0] >= '0')) {
+				printErrorCode(700);
+				continue;
+			}
 			mDIJKSTRA(stoi(buf));
 		}
 		else if (buf.find("BELLMANFORD") != string::npos)
@@ -91,20 +116,32 @@ void Manager::run(const char *command_txt)
 			int opt1;
 			stringstream ss(buf);
 			getline(ss, buf, ' ');
+			if (buf.empty()) {
+				printErrorCode(800);
+				continue;
+			}
 			getline(ss, buf, ' ');
+			if (buf.empty() || !(buf[0] <= '9' && buf[0] >= '0')) {
+				printErrorCode(800);
+				continue;
+			}
 			opt1 = stoi(buf);
 			getline(ss, buf);
+			if (buf.empty() || !(buf[0] <= '9' && buf[0] >= '0')) {
+				printErrorCode(800);
+				continue;
+			}
 			mBELLMANFORD(opt1, stoi(buf));
 		}
-		else if (buf == "FLOYD")
+		else if (buf.find("FLOYD") != string::npos)
 		{
 			mFLOYD();
 		}
-		else if (buf == "EXIT")
+		else if (buf.find("EXIT") != string::npos)
 		{
+			break;
 		}
 	}
-
 	fin.close();
 }
 
@@ -123,6 +160,8 @@ bool Manager::LOAD(string filename)
 	int to;
 	int weight;
 	getline(fgraph, buf);
+	if (load)
+		delete graph;
 	if (filename == "graph_L.txt" && buf == "L")
 	{
 		type = 0;
@@ -170,10 +209,10 @@ bool Manager::LOAD(string filename)
 			}
 		}
 	}
-
+	load++; // flag whether graph is loaded or not
 	fout << "======== LOAD ========\n";
 	fout << "Success\n";
-	fout << "======================\n";
+	fout << "======================\n\n";
 
 	return true;
 }
@@ -187,7 +226,7 @@ bool Manager::PRINT()
 	}
 	fout << "======== PRINT ========\n";
 	graph->printGraph(&fout);
-	fout << "=======================\n";
+	fout << "=======================\n\n";
 	return true;
 }
 
@@ -225,7 +264,7 @@ bool Manager::mDFS_R(int vertex)
 	fout << "======== DFS_R ========\n";
 	fout << "startvertex : " << vertex << "\n";
 	DFS_R(graph, &visited, vertex, &fout);
-	fout << "=======================\n";
+	fout << "=======================\n\n";
 	return true;
 }
 
@@ -245,15 +284,15 @@ bool Manager::mKRUSKAL()
 
 bool Manager::mDIJKSTRA(int vertex)
 {
-	if (graph == nullptr)
+	if (graph == nullptr || vertex >= graph->getSize()) 
 	{
 		printErrorCode(700);
 		return false;
 	}
-	fout << "======== Dijkstra ========\n";
-	fout << "startvertex : " << vertex << "\n";
-	Dijkstra(graph, vertex, &fout);
-	fout << "==========================\n";
+	if (!Dijkstra(graph, vertex, &fout)) { // negative weight!
+		printErrorCode(700);
+		return false;
+	}
 	return true;
 }
 
